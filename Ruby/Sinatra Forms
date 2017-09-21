@@ -1,0 +1,12 @@
+
+Competencies
+
+Should know how to make multi-page web apps now
+Already familiar with forms in HTML, forms in Sinatra are handled via ERB
+Basically just using the HTML form as a skeleton, adding our Ruby code with ERB tags
+Ruby will allow your forms to actually do stuff and handle the form data
+
+Applications
+Create forms for our web applications
+Correctly route forms
+
