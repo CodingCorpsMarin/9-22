@@ -1,0 +1,166 @@
+We'll create a very simple to-do list
+Create a new project folder, we’ll be starting a fresh application.
+
+mkdir forms-practice
+cd forms-practice
+
+Add a Gemfile, save it with no file extension
+Add following lines to gemfile:
+
+source “https://rubygems.org”
+
+gem “sinatra”
+gem “shotgun”
+
+
+Create controller app.rb
+
+require ‘bundler/setup’
+Bundler.require
+
+get ‘/’ do 
+   ‘Hello World’
+end
+
+Make root go to index, so make a views folder and then create index.html.erb inside
+
+get ‘/’ do
+  erb :’index.html’
+end
+
+
+Create a form in index
+
+<form action=”submit”>
+  <input type=”text”>
+  <input type=”submit”>
+</form>
+
+Can put placeholders, specific values for inputs, whatever. We’ll keep it simple.
+
+Click submit, what happens?
+
+Give input a name.
+<input type=”text” name=”search”>
+Check the browser, what happens?
+Give the form a post method
+<form action=”submit” method=”post”>
+
+Click submit, paste that suggested route into your controller.
+
+post ‘/submit’ do 
+  “Submit page”
+end
+
+For now, let’s redirect to our same page to practice our routing.
+
+post ‘/submit’ do
+  erb :’index.html’
+end 
+
+Fix up our form so it seems like a real one
+
+<form action=”submit”>
+  <input type=”text” name=”name”>
+  <input type=”password” name=”password”>
+  <input type=”submit”>
+</form>
+
+
+Let’s see what data got handled, in index.html.erb
+
+<div class=”debug”>
+Params: <%= params %>
+</div>
+
+Test it out.
+
+Let’s give our application some parameters to work with
+
+In our controller, 
+get ‘/’ do 
+  items = [
+	{name: “learn html”},
+	{name: “learn ruby”},
+	{name: “learn javascript”}
+]
+
+
+  erb :”index.html”, locals: {items: items}
+end
+
+Do this for the post route as well 
+
+Go over to index
+
+List out our items
+<ul>
+  <% items.each do |item| %>
+     <li><%= item[:name] %></li>
+  <% end %>
+</ul>
+
+After listing the items out, maybe we need to show that we finished some.
+
+<style>
+  .done { text-decoration: line-through; }
+</style>
+
+<li class=”item <%= item[:status] %>
+
+Building up to this todo-list, let’s fix out form
+
+<form action=”submit” method=”POST”>
+  <input type=”text” name=”new_item”>
+  <br>
+  <input type=”submit”>
+</form>
+
+Let’s connect the data we’re sending from the form to the route
+
+post ‘/submit’ do
+  items = [
+    …
+  ]
+  new_item = {name: params[‘new_item’], status: ‘undone’]
+  items << new_item 
+  erb: ...
+end 
+
+Since we don’t have a database set up for this application, let’s make a quick and dirty memory stopgap.
+
+Create a todo.md file 
+Put our tasks in there
+
+ [x] learn html
+ [x] learn ruby
+ [ ] learn javascript
+
+Adjust our controller
+
+get ‘/’ do 
+  lines = File.read(‘todo.md’).split(“\n”)
+  items = []
+  lines.each do |line|
+     new_item = {
+        name: line[4..-1]
+        status: (line[1] == ‘x’) ? ‘done’ : ‘undone’
+     }
+
+     items << new_item
+  end
+
+  erb :’index.html’, locals: {items: item}
+end 
+
+Adjust the post route
+
+post ‘/submit’ do 
+  new_item = {name: params[‘new_item’], status: ‘undone’}
+  File.open(‘todo.md’, ‘a’) do |f| # ‘a’ means ‘append’
+    f << “\n”
+    f << ‘[ ] ’ + new_item[:name]
+  end 
+
+  redirect to(‘/’)
+end 
