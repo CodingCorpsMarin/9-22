@@ -22,6 +22,9 @@ get ‘/’ do
    ‘Hello World’
 end
 
+Try it out, shotgun app.rb
+If shotgun doesn't work, just launch with ruby app.rb
+
 Make root go to index, so make a views folder and then create index.html.erb inside
 
 get ‘/’ do
@@ -108,7 +111,7 @@ After listing the items out, maybe we need to show that we finished some.
 
 <li class=”item <%= item[:status] %>
 
-Building up to this todo-list, let’s fix out form
+Building up to this todo-list, let’s fix our form
 
 <form action=”submit” method=”POST”>
   <input type=”text” name=”new_item”>
@@ -139,7 +142,7 @@ Put our tasks in there
 Adjust our controller
 
 get ‘/’ do 
-  lines = File.read(‘todo.md’).split(“\n”)
+  lines = File.read(‘todo.md’).split(“\n”) # ruby has the File library that will open a file
   items = []
   lines.each do |line|
      new_item = {
@@ -164,3 +167,4 @@ post ‘/submit’ do
 
   redirect to(‘/’)
 end 
+
